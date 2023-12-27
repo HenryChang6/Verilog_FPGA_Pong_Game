@@ -84,17 +84,7 @@ key_pad_controller kp(
     .down2(down2),
 );
 
-ball_state_machine bsm (
-    // input
-    .clk(clk),
-    .rst(rst),
-    .start(start),
-    // output
-    .ball_x(ball_x),
-    .ball_y(ball_y),
-);
-
-paddle_state_machine psm(
+state_machine sm (
     // input
     .clk(clk),
     .rst(rst),
@@ -103,7 +93,10 @@ paddle_state_machine psm(
     .up2(up2),
     .down1(down1),
     .down2(down2),
+    .sec1(sec1), //每十秒增加速度
     // output
+    .ball_x(ball_x),
+    .ball_y(ball_y),
     .paddle1_x(paddle1_x),
     .paddle1_y(paddle1_y),
     .paddle2_x(paddle2_x),
