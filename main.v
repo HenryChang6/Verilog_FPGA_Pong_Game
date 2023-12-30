@@ -23,7 +23,7 @@ module main(
 // down2  7
 wire up1, up2, down1, down2;
 wire clk_1Hz, clk_100Hz , clk_10kHz, clk_25MHz, clk_ball;
-wire paddle1_x, paddle1_y, paddle2_x, paddle2_y;
+wire paddle1, paddle2;
 wire ball_x, ball_y;
 wire score1, score2;
 wire [3:0] min, [3:0] sec1, [3:0] sec2;
@@ -97,10 +97,8 @@ state_machine sm (
     // output
     .ball_x(ball_x),
     .ball_y(ball_y),
-    .paddle1_x(paddle1_x),
-    .paddle1_y(paddle1_y),
-    .paddle2_x(paddle2_x),
-    .paddle2_y(paddle2_y),
+    .paddle1(paddle1),
+    .paddle2(paddle2),
 );
 
 score_counter sc(
@@ -162,10 +160,8 @@ graphics_gen gp(
     .enable(enable),
     .ball_x(ball_x),
     .ball_y(ball_y),
-    .paddle1_x(paddle1_x),
-    .paddle1_y(paddle1_y),
-    .paddle2_x(paddle2_x),
-    .paddle2_y(paddle2_y),
+    .paddle1(paddle1),
+    .paddle2(paddle2),
     // output
     .red(red),
     .green(green),
