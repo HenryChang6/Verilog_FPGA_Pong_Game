@@ -25,10 +25,91 @@ wire up1, up2, down1, down2;
 wire clk_1Hz, clk_100Hz , clk_10kHz, clk_25MHz, clk_ball;
 wire paddle1, paddle2;
 wire ball_x, ball_y;
-wire score1, score2;
 wire [3:0] min, [3:0] sec1, [3:0] sec2;
 wire [11:0] h_cnt, [11:0] v_cnt;
 wire enable;
+wire miss1, miss2;
+reg[2:0] score1_q = 0, score1_d, score2_q = 0, score2_d;
+// q 代表 現在值  d 代表 下一個時刻的值
+reg [1:0] state_q, state_d;
+reg stop;
+reg newball_timer;
+wire ewball_timer_tick, newball_timer_up;
+
+parameter [1:0] new_game = 0, play = 1, new_ball = 2, over = 3;
+
+// 每個 clk 定期更新值
+always @(posedge clk or negedge rst) 
+begin
+    if(!rst)
+    begin
+        state_q <= 2'd0;
+        state_d <= 2'd0;
+        score1_q <= 0;
+        score2_q <= 0;
+    end
+    else
+    begin
+        state_q <= state_d;
+        score1_q <= score1_d;
+        score2_q <= score1_d;
+    end
+end
+
+
+// FSM 
+always @(*)
+begin
+    // 確保若沒有改變 下一個狀況有值
+    state_d = state_q;
+    score1_d = score1_q;
+	score2_d = score2_q;
+    stop = 1;
+    case(state_q)
+
+        new_game:
+        begin
+            score1_d = 0;
+            score2_d = 0;
+            min = 0;
+            sec1 = 0;
+            sec2 = 0;
+            if(start) state_d = play;
+        end
+
+        play:
+        begin
+            stop = 0;
+            if(miss1 || miss2)
+            begin
+                timer_new_ball = 1;
+                if(miss1) score2_d = score2_q + 1;
+                else score1_d = score1_q + 1;
+                state_d = new_ball;
+            end
+        end
+        
+        //when any of the player misses, 2 seconds will be alloted before the game can start again
+        new_ball:
+        begin   
+            
+        end
+
+        over:
+        begin 
+        end
+    endcase
+
+end
+
+newball_timer m(
+    // input
+    .clk(clk),
+    .rst_n(rst),
+    // output
+    
+);
+
 
 fd_1Hz fd1(
     // input
@@ -102,18 +183,10 @@ state_machine sm (
     .paddle2(paddle2),
 );
 
-score_counter sc(
-    // input 
-    .ball_x(ball_x),
-    // output
-    .score1(score1),
-    .score2(score2),
-);
-
 dot_matrix_controller dm(
     // input
-    .score1(score1),
-    .score2(score2),
+    .score1(score1_q),
+    .score2(score2_q),
     .clk(clk_10kHz),
     .rst(rst),
     // output

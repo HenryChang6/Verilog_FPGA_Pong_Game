@@ -28,25 +28,7 @@ parameter [1:0] over = 2'd3;
 // q 代表 現在值  d 代表 下一個時刻的值
 reg [1:0] state_q, state_d;
 reg ball_x_d, ball_y_d;
-
-// 每個 clk 定期更新值
-always @(posedge clk or negedge rst) 
-begin
-    if(!rst)
-    begin
-        state_q <= 2'd0;
-        state_d <= 2'd0;
-        ball_x <= 2'd0;
-        ball_y <= 2'd0;
-    end
-    else
-    begin
-        state_q <= state_d;
-        ball_x <= ball_x_d;
-        ball_y <= ball_y_d;
-    end
-end
-
+reg stop;
 
 
 
