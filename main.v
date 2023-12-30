@@ -27,6 +27,7 @@ wire paddle1, paddle2;
 wire ball_x, ball_y;
 wire score1, score2;
 wire [3:0] min, [3:0] sec1, [3:0] sec2;
+wire [11:0] h_cnt, [11:0] v_cnt;
 wire enable;
 
 fd_1Hz fd1(
@@ -152,6 +153,8 @@ vga_controller vga(
     // output
     .Hsync(Hsync),
     .Vsync(Vsync),
+    .h_cnt(h_cnt),
+    .v_cnt(v_cnt),
     .enable(enable),
 );
 
