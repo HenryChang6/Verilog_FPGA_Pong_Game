@@ -105,7 +105,6 @@ state_machine sm (
 score_counter sc(
     // input 
     .ball_x(ball_x),
-    .ball_y(ball_y),
     // output
     .score1(score1),
     .score2(score2),
