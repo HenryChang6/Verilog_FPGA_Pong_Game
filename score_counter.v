@@ -1,16 +1,15 @@
-score_counter sc(
-    // input 
-    .ball_x(ball_x),
-    .ball_y(ball_y),
-    // output
-    .score1(score1),
-    .score2(score2),
-);
-
 module score_counter(
-    input ball_x,
+    input  ball_x,
     output score1,
     output score2,
 );
 
+always @(ball_x) begin
+    state_q<=state_d;
+    ball_q<=ball_d;
+    score1_q<=score1_d;
+    score2_q<=score2_d;
+end
+
 endmodule
+
