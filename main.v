@@ -39,7 +39,7 @@ reg newball_timer_start;
 parameter [1:0] new_game = 0, play = 1, new_ball = 2, over = 3;
 
 // 每個 clk 定期更新值
-always @(posedge clk or negedge rst) 
+always @(posedge clk, negedge rst) 
 begin
     if(!rst)
     begin
@@ -57,7 +57,7 @@ begin
 end
 
 
-// FSM 
+// FSM Game Logic
 always @(*)
 begin
     // 確保若沒有改變 下一個狀況有值
@@ -181,7 +181,7 @@ state_machine sm (
     // input
     .clk(clk),
     .rst(rst),
-    .start(start),
+    .stop(stop),
     .up1(up1),
     .up2(up2),
     .down1(down1),
@@ -190,8 +190,8 @@ state_machine sm (
     // output
     .ball_x(ball_x),
     .ball_y(ball_y),
-    .paddle1(paddle1),
-    .paddle2(paddle2),
+    .paddle1_q(paddle1),
+    .paddle2_q(paddle2),
     .miss1(miss1),
     .miss2(miss2),
 );
