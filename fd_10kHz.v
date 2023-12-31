@@ -1,7 +1,7 @@
 module fd_10kHz(
     input      clk,  // 50MHz input clk
     input      rst,
-    output reg clk_1Hz
+    output reg clk_10kHz
 );
 
 // 50,000,000Hz 到 10,000Hz需要的計數次數是5,000
