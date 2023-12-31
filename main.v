@@ -17,10 +17,7 @@ module main(
     output [6:0] sd_min, //七段顯示器 Hex2
 );
 
-// up1    A 
-// down1  0
-// up2    8
-// down2  7
+
 wire up1, up2, down1, down2;
 wire clk_1Hz, clk_100Hz , clk_10kHz, clk_25MHz, clk_ball, clk_2s;
 wire paddle1, paddle2;

@@ -9,6 +9,31 @@ module key_pad_controller (
     output down2, // 7 being pressed
 );
 
+reg [3:0] keypadBuf;
 
+always @(posedge clock) 
+begin
+    if(!reset) 
+    begin
+        keypadBuf <= 4'h0;
+        keypadRow <= 4'b1110;
+    end
+    else
+    begin
+        case({keypadRow,keypadCol})
+                8'b1101_1110: keypadBuf <= 4'h8;
+                8'b1101_1101: keypadBuf <= 4'h5;
+                8'b1101_1011: keypadBuf <= 4'h2;
+                8'b1101_0111: keypadBuf <= 4'hA;
+
+                8'b1110_1110: keypadBuf <= 4'h7;
+                8'b1110_1101: keypadBuf <= 4'h4;
+                8'b1110_1011: keypadBuf <= 4'h1;
+                8'b1110_0111: keypadBuf <= 4'h0;
+            default:
+
+        endcase
+    end
+end
 
 endmodule
