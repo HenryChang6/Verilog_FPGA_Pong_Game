@@ -1,5 +1,5 @@
 module two_sec_counter(
-    input clk,  
+    input clk,  //50MHz
     input rst,
     input start_counting,
     output reg clk_2s
