@@ -1,11 +1,11 @@
-module (
+module vga_controller (
 	input clk,
 	input rst,
 	input H_sync,
 	input V_sync,
 	output reg [11:0] h_cnt,
 	output reg [11:0] v_cnt,
-	output enable,
+	output enable
 );
 parameter H_sync_pulse = 96,
 		  H_back_porch = 48,
@@ -13,7 +13,7 @@ parameter H_sync_pulse = 96,
 		  H_front_porch = 16,
 		  H_line_period = 800;
  
-parameter V_sync_pusle = 2,
+parameter V_sync_pulse = 2,
 		  V_back_porch = 33,
 		  V_active_time = 480,
 		  V_front_porch = 10,

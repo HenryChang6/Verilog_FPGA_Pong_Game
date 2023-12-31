@@ -27,8 +27,8 @@ module state_machine(
     output ball_y,
     output paddle1_q, //paddle1的y座標（x座標不會動 不用管）
     output paddle2_q, //paddle2的y座標（x座標不會動 不用管）
-    output miss1,   // player1 misses  
-    output miss2,   // player2 misses
+    output reg miss1,   // player1 misses  
+    output reg miss2   // player2 misses
 );
 
 localparam  // X coordinate
@@ -46,7 +46,7 @@ localparam  // X coordinate
             // Border (wall thick = 10)
             X_RIGHT_BOUNDARY = 630, 
             X_LEFT_BOUNDARY = 9,
-            Y_BTM_BOUNDARY = 470
+            Y_BTM_BOUNDARY = 470,
             Y_TOP_BOUNDARY = 9;
         
 reg [9:0] paddle1_top_q = 214, paddle1_top_d; 
@@ -56,7 +56,7 @@ reg ball_xdelta_q = 0, ball_xdelta_d; // 1 --> bounce from left
 reg ball_ydelta_q = 0, ball_ydelta_d; // 0 --> bounce from right
 
 // 定期更新 register 值
-always(posedge clk, negedge rst)
+always @(posedge clk, negedge rst)
 begin
   if(!rst)
   begin

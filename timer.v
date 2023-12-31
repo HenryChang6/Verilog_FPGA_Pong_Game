@@ -4,7 +4,7 @@ module timer(
     input start,
     output reg [3:0] min,
     output reg [3:0] sec1, // 秒鐘的十位數
-    output reg [3:0] sec2, // 秒鐘的個位數
+    output reg [3:0] sec2 // 秒鐘的個位數
 );
 
 initial 
@@ -20,7 +20,7 @@ begin
     begin
         min <= 4'd2;
         sec1 <= 4'd0;
-        sec <= 4'd0;
+        sec2 <= 4'd0;
     end
     else 
     begin

@@ -2,7 +2,6 @@ module main(
     input clk,
     input rst,
     // gen up & down via key_pad_controller.v
-    input [3:0] kp_row,
     input [3:0] kp_col,
     input start,
     output Hsync,
@@ -10,13 +9,16 @@ module main(
     output [3:0] red,
     output [3:0] green,
     output [3:0] blue,
-    output [7:0] dot_row,
-    output [7:0] dot_col,
+    output [7:0] dot_row1,
+    output [7:0] dot_col1,
+	 output [7:0] dot_row2,
+    output [7:0] dot_col2,
     output [6:0] sd_sec_dig1, //七段顯示器 Hex0
     output [6:0] sd_sec_dig2, //七段顯示器 Hex1
-    output [6:0] sd_min, //七段顯示器 Hex2
+    output [6:0] sd_min //七段顯示器 Hex2
 );
 
+// test
 
 wire up1, up2, down1, down2;
 wire clk_1Hz, clk_100Hz , clk_10kHz, clk_25MHz, clk_ball, clk_2s;
@@ -29,19 +31,18 @@ wire miss1, miss2;
 reg[2:0] score1_q = 0, score1_d, score2_q = 0, score2_d;
 // q 代表 現在值  d 代表 下一個時刻的值
 reg [1:0] state_q, state_d;
-reg stop;
+wire stop;
 reg newball_timer_start;
 
 
 parameter [1:0] new_game = 0, play = 1, new_ball = 2, over = 3;
 
 // 每個 clk 定期更新值
-always @(posedge clk, negedge rst) 
+always @(posedge clk or negedge rst) 
 begin
     if(!rst)
     begin
         state_q <= 2'd0;
-        state_d <= 2'd0;
         score1_q <= 0;
         score2_q <= 0;
     end
@@ -53,61 +54,65 @@ begin
     end
 end
 
+assign stop = (state_q != play);
 
 // FSM Game Logic
-always @(*)
+always @*
 begin
-    // 確保若沒有改變 下一個狀況有值
-    state_d = state_q;
-    score1_d = score1_q;
-	score2_d = score2_q;
-    stop = 1;
-    newball_timer_start = 0;
-    case(state_q)
+	 if(!rst)
+    begin
+        state_d <= 2'd0;
+    end
+    else
+		begin
+		 case(state_q)
 
-        new_game:
-        begin
-            score1_d = 0; score2_d = 0;
-            min = 0; sec1 = 0; sec2 = 0;
-            if(start) state_d = play;
-        end
+			  new_game:
+			  begin
+					score1_d = 0; score2_d = 0;
+					if(start) state_d = play;
+			  end
 
-        play:
-        begin
-            stop = 0;
-            if(min == 0 && sec1 == 0 && && sec2 == 0)
-            begin
-                stop = 1;
-                start = 0;
-                state_d = over;
-            end
-            else 
-            begin
-                if(miss1 || miss2)
-                begin
-                    newball_timer_start = 1;
-                    if(miss1) score2_d = score2_q + 1;
-                    else score1_d = score1_q + 1;
-                    state_d = new_ball;
-                end
-            end
-        end
-        
-        //when any of the player misses, 2 seconds will be alloted before the game can start again
-        new_ball:
-        begin   
-            if(clk_2s && start) state_d = play;
-        end
+			  play:
+			  begin
+					if(min == 0 && sec1 == 0 && sec2 == 0)
+						 state_d = over;
+					
+					else 
+					begin
+						 if(miss1 || miss2)
+						 begin
+							  newball_timer_start = 1;
+							  if(miss1) score2_d = score2_q + 1;
+							  else score1_d = score1_q + 1;
+							  state_d = new_ball;
+						 end
+					end
+			  end
+			  
+			  //when any of the player misses, 2 seconds will be alloted before the game can start again
+			  new_ball:
+			  begin   
+					newball_timer_start = 0;
+					if(clk_2s && start) state_d = play;
+			  end
 
-        over:
-        begin 
-            // When time over. End the game
-            if(min = 0 && sec1 = 0 && && sec2 = 0) state_d = new_game;
-        end
+			  over:
+			  begin 
+					// When time over. End the game
+					if(min == 0 && sec1 == 0 && sec2 == 0) 
+						state_d = new_game;
+			  end
 
-        default:
-            state_d = new_game;
-    endcase
+			  default:
+			  begin
+					state_d = state_q;
+					score1_d = score1_q;
+					score2_d = score2_q;
+			  end
+		 endcase
+	
+	end
 
 end
 
@@ -116,7 +121,7 @@ fd_1Hz fd1(
     .clk(clk),
     .rst(rst),
     // output
-    .clk_1Hz(clk_1Hz),
+    .clk_1Hz(clk_1Hz)
 );
 
 fd_100Hz fd2(
@@ -124,7 +129,7 @@ fd_100Hz fd2(
     .clk(clk),
     .rst(rst),
     // output
-    .clk_100Hz(clk_100Hz),
+    .clk_100Hz(clk_100Hz)
 );
 
 fd_10kHz fd3(
@@ -132,32 +137,25 @@ fd_10kHz fd3(
     .clk(clk),
     .rst(rst),
     // output
-    .clk_10kHz(clk_10kHz),
+    .clk_10kHz(clk_10kHz)
 );
 
-fd_25MHz fd4(
-    // input
-    .clk(clk),
-    .rst(rst),
-    // output
-    .clk_25MHz(clk_25MHz),
-);
 
 fd_ball fd5(
     // input
     .clk(clk),
     .rst(rst),
     // output
-    .clk_25MHz(clk_ball),
+    .clk_25MHz(clk_ball)
 );
 
 two_sec_counter fd6(
     // input
     .clk(clk),
     .rst(rst),
-    .start_counting(newball_timer),
+    .start_counting(newball_timer_start),
     // output 
-    .clk_2s(clk_2s),
+    .clk_2s(clk_2s)
 );
 
 
@@ -165,7 +163,6 @@ key_pad_controller kp(
     // input
     .clk(clk_100Hz),
     .rst(rst),
-    .kp_row(kp_row),
     .kp_col(kp_col), 
     // output
     .up1(up1),
@@ -190,21 +187,29 @@ state_machine sm (
     .paddle1_q(paddle1),
     .paddle2_q(paddle2),
     .miss1(miss1),
-    .miss2(miss2),
+    .miss2(miss2)
 );
 
-dot_matrix_controller dm(
+ascii_dot_matrix_controller dm1(
     // input
-    .score1(score1_q),
-    .score2(score2_q),
+    .ascii_code(score1_q),
     .clk(clk_10kHz),
-    .rst(rst),
     // output
-    .dot_col(dot_col),
-    .dot_row(dot_row),
+    .col(dot_col1),
+    .row(dot_row1)
 );
 
-timer tt( //用一個 max_min parameter來倒數
+ascii_dot_matrix_controller dm2(
+    // input
+    .ascii_code(score2_q),
+    .clk(clk_10kHz),
+    // output
+    .col(dot_col2),
+    .row(dot_row2)
+);
+
+
+timer tt( //用一個 max_min parameter來倒數	
     // input
     .clk(clk_1Hz),
     .rst(rst),
@@ -212,7 +217,7 @@ timer tt( //用一個 max_min parameter來倒數
     // output
     .min(min),
     .sec1(sec1),
-    .sec2(sec2),
+    .sec2(sec2)
 );
 
 seven_display_controller sd(
@@ -225,7 +230,7 @@ seven_display_controller sd(
     // output
     .sd_min(sd_min),
     .sd_sec_dig1(sd_sec_dig1),
-    .sd_sec_dig2(sd_sec_dig2),
+    .sd_sec_dig2(sd_sec_dig2)
 );
 
 vga_controller vga(
@@ -233,24 +238,23 @@ vga_controller vga(
     .clk(clk_25MHz),
     .rst(rst),
     // output
-    .Hsync(Hsync),
-    .Vsync(Vsync),
+    .H_sync(Hsync),
+    .V_sync(Vsync),
     .h_cnt(h_cnt),
     .v_cnt(v_cnt),
-    .enable(enable),
+    .enable(enable)
 );
 
 graphics_gen gp(
     // input
-    .enable(enable),
     .ball_x(ball_x),
     .ball_y(ball_y),
-    .paddle1(paddle1),
-    .paddle2(paddle2),
+    .paddle_1(paddle1),
+    .paddle_2(paddle2),
     // output
     .red(red),
     .green(green),
-    .blue(blue),
+    .blue(blue)
 );
 
 

@@ -13,11 +13,11 @@ reg [24:0] count;  // 25位計數器足以計數到25,000,000
 always @(posedge clk or posedge rst) begin
     if (rst) begin
         count <= 0;
-        clk_1Hz <= 0;
+        clk_10kHz <= 0;
     end else begin
         if (count >= COUNT_MAX - 1) begin
             count <= 0;
-            clk_1Hz <= ~clk_1Hz;  // 切換clk_1Hz信號
+            clk_10kHz <= ~clk_10kHz;  // 切換clk_1Hz信號
         end else begin
             count <= count + 1;
         end

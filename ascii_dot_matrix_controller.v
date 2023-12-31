@@ -9,7 +9,7 @@ module ascii_dot_matrix_controller (
 wire [7:0] rom_data;
 ascii_rom ascii_rom_instance (
     .clk(clk),
-    .addr({ascii_code, current_row}),
+    .addr({ascii_code + 7'd48, current_row}),
     .data(rom_data)
 );
 
