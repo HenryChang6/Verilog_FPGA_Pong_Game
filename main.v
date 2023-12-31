@@ -22,7 +22,7 @@ module main(
 // up2    8
 // down2  7
 wire up1, up2, down1, down2;
-wire clk_1Hz, clk_100Hz , clk_10kHz, clk_25MHz, clk_ball;
+wire clk_1Hz, clk_100Hz , clk_10kHz, clk_25MHz, clk_ball, clk_2s;
 wire paddle1, paddle2;
 wire ball_x, ball_y;
 wire [3:0] min, [3:0] sec1, [3:0] sec2;
@@ -33,8 +33,8 @@ reg[2:0] score1_q = 0, score1_d, score2_q = 0, score2_d;
 // q 代表 現在值  d 代表 下一個時刻的值
 reg [1:0] state_q, state_d;
 reg stop;
-reg newball_timer;
-wire ewball_timer_tick, newball_timer_up;
+reg newball_timer_start;
+
 
 parameter [1:0] new_game = 0, play = 1, new_ball = 2, over = 3;
 
@@ -65,51 +65,54 @@ begin
     score1_d = score1_q;
 	score2_d = score2_q;
     stop = 1;
+    newball_timer_start = 0;
     case(state_q)
 
         new_game:
         begin
-            score1_d = 0;
-            score2_d = 0;
-            min = 0;
-            sec1 = 0;
-            sec2 = 0;
+            score1_d = 0; score2_d = 0;
+            min = 0; sec1 = 0; sec2 = 0;
             if(start) state_d = play;
         end
 
         play:
         begin
             stop = 0;
-            if(miss1 || miss2)
+            if(min = 0 && sec1 = 0 && && sec2 = 0)
             begin
-                timer_new_ball = 1;
-                if(miss1) score2_d = score2_q + 1;
-                else score1_d = score1_q + 1;
-                state_d = new_ball;
+                stop = 1;
+                start = 0;
+                state_d = over;
+            end
+            else 
+            begin
+                if(miss1 || miss2)
+                begin
+                    newball_timer_start = 1;
+                    if(miss1) score2_d = score2_q + 1;
+                    else score1_d = score1_q + 1;
+                    state_d = new_ball;
+                end
             end
         end
         
         //when any of the player misses, 2 seconds will be alloted before the game can start again
         new_ball:
         begin   
-            
+            if(clk_2s && start) state_d = play;
         end
 
         over:
         begin 
+            // When time over. End the game
+            if(min = 0 && sec1 = 0 && && sec2 = 0) state_d = new_game;
         end
+
+        default:
+            state_d = new_game;
     endcase
 
 end
-
-newball_timer m(
-    // input
-    .clk(clk),
-    .rst_n(rst),
-    // output
-    
-);
-
 
 fd_1Hz fd1(
     // input
@@ -151,6 +154,14 @@ fd_ball fd5(
     .clk_25MHz(clk_ball),
 );
 
+two_sec_counter fd6(
+    // input
+    .clk(clk),
+    .rst(rst),
+    .start_counting(newball_timer),
+    // output 
+    .clk_2s(clk_2s),
+);
 
 
 key_pad_controller kp(
@@ -181,6 +192,8 @@ state_machine sm (
     .ball_y(ball_y),
     .paddle1(paddle1),
     .paddle2(paddle2),
+    .miss1(miss1),
+    .miss2(miss2),
 );
 
 dot_matrix_controller dm(
@@ -194,7 +207,7 @@ dot_matrix_controller dm(
     .dot_row(dot_row),
 );
 
-timer tt(
+timer tt( //用一個 max_min parameter來倒數
     // input
     .clk(clk_1Hz),
     .rst(rst),
