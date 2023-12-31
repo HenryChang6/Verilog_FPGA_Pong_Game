@@ -78,7 +78,7 @@ begin
         play:
         begin
             stop = 0;
-            if(min = 0 && sec1 = 0 && && sec2 = 0)
+            if(min == 0 && sec1 == 0 && && sec2 == 0)
             begin
                 stop = 1;
                 start = 0;
