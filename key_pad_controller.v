@@ -10,7 +10,6 @@ module key_pad_controller (
 );
 
 reg [3:0] keypadBuf;
-
 always @(posedge clock) 
 begin
     if(!reset) 
@@ -30,10 +29,52 @@ begin
                 8'b1110_1101: keypadBuf <= 4'h4;
                 8'b1110_1011: keypadBuf <= 4'h1;
                 8'b1110_0111: keypadBuf <= 4'h0;
-            default:
 
+            default:
+                keypadBuf <= keypadBuf;
+        endcase
+        case(keypadRow)
+                4'b1101: keypadRow <= 4'b1110;
+                4'b1110: keypadRow <= 4'b1101;
+                default: keypadRow <= 4'b1101;
         endcase
     end
 end
 
 endmodule
+
+always @(keypadBuf)
+begin
+    case(keypadBuf)
+        4'hA:
+        begin
+            up1 <= 1;
+            up2 <= 0;
+            down1 <= 0;
+            down2 <= 0;
+        end
+
+        4'h8:
+        begin
+            up1 <= 0;
+            up2 <= 1;
+            down1 <= 0;
+            down2 <= 0;
+        end
+        4'h0:
+        begin
+            up1 <= 0;
+            up2 <= 0;
+            down1 <= 1;
+            down2 <= 0;
+        end
+        4'h7:
+        begin
+            up1 <= 0;
+            up2 <= 0;
+            down1 <= 0;
+            down2 <= 1;
+        end
+    endcase
+    
+end
