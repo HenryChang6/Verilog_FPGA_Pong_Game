@@ -33,7 +33,7 @@ wire [11:0]h_cnt, v_cnt;
 wire enable;
 wire miss1, miss2;
 reg [3:0] score1_q, score1_d, score2_q, score2_d;
-wire [3:0] score_1_q_wire, score_2_q_wire;
+wire [3:0] score1_q_wire, score2_q_wire;
 // q 代表 現在值  d 代表 下一個時刻的值
 reg [1:0] state_q, state_d;
 reg stop;
@@ -200,7 +200,7 @@ state_machine sm (
     .up2(up2),
     .down1(down1),
     .down2(down2),
-    .sec1(sec1), //每十秒增加速度
+    .min(min), //每十秒增加速度
     // output
     .ball_x(ball_x),
     .ball_y(ball_y),
