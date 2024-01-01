@@ -15,7 +15,9 @@ module main(
     output [7:0] dot_col2,
     output [6:0] sd_sec_dig1, //七段顯示器 Hex0
     output [6:0] sd_sec_dig2, //七段顯示器 Hex1
-    output [6:0] sd_min //七段顯示器 Hex2
+    output [6:0] sd_min, //七段顯示器 Hex2
+	 output [3:0] kp_row,
+	 output [3:0]led
 );
 
 // test
@@ -33,7 +35,6 @@ reg[2:0] score1_q = 0, score1_d, score2_q = 0, score2_d;
 reg [1:0] state_q, state_d;
 wire stop;
 reg newball_timer_start;
-
 
 parameter [1:0] new_game = 0, play = 1, new_ball = 2, over = 3;
 
@@ -86,6 +87,12 @@ begin
 							  if(miss1) score2_d = score2_q + 1;
 							  else score1_d = score1_q + 1;
 							  state_d = new_ball;
+						 end
+						 else
+						 begin
+							  state_d = play;
+							  score1_d = score1_d;
+							  score2_d = score2_d;
 						 end
 					end
 			  end
@@ -175,10 +182,11 @@ key_pad_controller kp(
     .rst(rst),
     .kp_col(kp_col), 
     // output
+	 .kp_row(kp_row),
     .up1(up1),
     .up2(up2),
     .down1(down1),
-    .down2(down2),
+    .down2(down2)
 );
 
 state_machine sm (
@@ -261,14 +269,15 @@ graphics_gen gp(
     .ball_y(ball_y),
     .paddle_1(paddle1),
     .paddle_2(paddle2),
-	.h_cnt(h_cnt),
-	.v_cnt(v_cnt),
-	.enable(enable),
+	 .h_cnt(h_cnt),
+	 .v_cnt(v_cnt),
+	 .enable(enable),
     // output
     .red(red),
     .green(green),
     .blue(blue)
 );
 
+assign led = {2'b00, state_q};
 
 endmodule
