@@ -28,6 +28,8 @@ always@(posedge clk or negedge rst)begin
 		h_cnt <= h_cnt + 1'b1;
 end
 
+assign H_sync = (h_cnt < H_sync_pulse) ? 1'b0 : 1'b1;
+
 always@(posedge clk or negedge rst)begin
 	if(!rst)
 		v_cnt <= 12'd0;
@@ -38,6 +40,8 @@ always@(posedge clk or negedge rst)begin
 	else
 		v_cnt <= v_cnt;
 end
+
+assign V_sync = (v_cnt < V_sync_pulse) ? 1'b0 : 1'b1;
 
 assign enable = (h_cnt >= (H_sync_pulse + H_back_porch))&&
                 (h_cnt <= (H_sync_pulse + H_back_porch + H_active_time))&& 

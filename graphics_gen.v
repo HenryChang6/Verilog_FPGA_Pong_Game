@@ -5,7 +5,7 @@ module graphic_gen(
     input [11:0] ball_y,
     input [11:0] v_cnt,
     input [11:0] h_cnt,
-    input flag,
+    input enable,
     output reg [3:0] red,
     output reg [3:0] green,
     output reg [3:0] blue
@@ -56,7 +56,7 @@ assign ball = (h_cnt > (h_sync_pulse + h_back_porch + ball_x)) &&
               (v_cnt < (v_sync_pulse + v_back_porch + ball_y + ball_side));
 		
 always@(*)begin
-	if(flag) begin
+	if(enable) begin
 		if(border || serving_line || paddle || ball) begin
 			red = 4'd15;
 			green = 4'd15;
