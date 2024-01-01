@@ -2,7 +2,6 @@ module main(
     input clk,
     input rst,
     // gen up & down via key_pad_controller.v
-	//input [3:0] kp_row,
     input [3:0] kp_col,
     input start,
     output Hsync,
@@ -11,8 +10,8 @@ module main(
     output [3:0] green,
     output [3:0] blue,
     output [7:0] dot_row1,
-	output [7:0] dot_row2,
     output [7:0] dot_col1,
+	 output [7:0] dot_row2,
     output [7:0] dot_col2,
     output [6:0] sd_sec_dig1, //七段顯示器 Hex0
     output [6:0] sd_sec_dig2, //七段顯示器 Hex1
@@ -141,6 +140,7 @@ fd_10kHz fd3(
     .clk_10kHz(clk_10kHz)
 );
 
+
 fd_25MHz fd4(
     // input
     .clk(clk),
@@ -239,8 +239,8 @@ seven_display_controller sd(
     .sec2(sec2),
     // output
     .sd_min(sd_min),
-    .sd_sec_dig1(sd_sec_dig1),
-    .sd_sec_dig2(sd_sec_dig2)
+    .sd_sec_dig1(sd_sec_dig2),
+    .sd_sec_dig2(sd_sec_dig1)
 );
 
 vga_controller vga(
