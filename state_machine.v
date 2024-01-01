@@ -23,10 +23,10 @@ module state_machine(
     input  down1,
     input  down2,
     input  sec1,    //遊戲秒數的十位數 （因為遊戲機制會是倒數結束，所以應該要是每減少一次，速度就上升一些）
-    output ball_x,
-    output ball_y,
-    output paddle1_q, //paddle1的y座標（x座標不會動 不用管）
-    output paddle2_q, //paddle2的y座標（x座標不會動 不用管）
+    output [9:0] ball_x,
+    output [9:0] ball_y,
+    output [9:0] paddle1_q, //paddle1的y座標（x座標不會動 不用管）
+    output [9:0] paddle2_q, //paddle2的y座標（x座標不會動 不用管）
     output reg miss1,   // player1 misses  
     output reg miss2   // player2 misses
 );
@@ -176,8 +176,8 @@ end
 // ...
 
 // 輸出賦值
-assign paddle1_q = paddle1_top_q;
-assign paddle2_q = paddle2_top_q;
+assign paddle1_q = paddle1_top_d;
+assign paddle2_q = paddle2_top_d;
 assign ball_x = ball_x_q;
 assign ball_y = ball_y_q;
 

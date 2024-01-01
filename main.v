@@ -24,8 +24,10 @@ module main(
 
 wire up1, up2, down1, down2;
 wire clk_1Hz, clk_100Hz , clk_10kHz, clk_25MHz, clk_ball, clk_2s;
-wire paddle1, paddle2;
-wire ball_x, ball_y;
+wire [9:0]paddle1;
+wire [9:0]paddle2;
+wire [9:0]ball_x;
+wire [9:0] ball_y;
 wire [3:0] min, sec1, sec2;
 wire [11:0] h_cnt, v_cnt;
 wire enable;
