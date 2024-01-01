@@ -151,12 +151,10 @@ begin
 		   ball_ydelta_d = ball_ydelta_d;
 
     // player miss Determination
-    if(ball_x_q > X_RIGHT_BOUNDARY) 
-    begin
-       // if bounce from left and surpass right boudary --> player2 misses
-        if(ball_xdelta_q) miss2 = 1;
-        else miss1 = 1;
-    end
+    if(ball_x_d > X_RIGHT_BOUNDARY) 
+        miss2 = 1;
+	 else if(X_LEFT_BOUNDARY > ball_x_d)
+		  miss1 = 1;
 	 else
 	     begin
 		  miss1 = miss1;
@@ -167,6 +165,7 @@ begin
     ball_x_d = ball_xdelta_d ? (ball_x_q + BALL_VELOCITY_POS) : (ball_x_q + BALL_VELOCITY_NEG);
     ball_y_d = ball_ydelta_d ? (ball_y_q + BALL_VELOCITY_POS) : (ball_y_q + BALL_VELOCITY_NEG);
 
+    
   end
 end
 
