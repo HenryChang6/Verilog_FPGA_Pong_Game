@@ -2,13 +2,14 @@ module key_pad_controller (
     input clk, //100Hz
     input rst,
     input [3:0] kp_col,
+    output [3:0] kp_row,
     output reg up1, // A being pressed
     output reg up2, // 8 being pressed
     output reg down1, // 0 being pressed
     output reg down2 // 7 being pressed
 );
 
-reg [3:0] keypadBuf, kp_row;
+reg [3:0] keypadBuf;
 always @(posedge clk) 
 begin
     if(!rst) 
