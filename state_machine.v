@@ -50,11 +50,11 @@ parameter  // X coordinate
             Y_BTM_BOUNDARY = 470,
             Y_TOP_BOUNDARY = 9;
         
-reg [9:0] paddle1_top_q = 214, paddle1_top_d; 
-reg [9:0] paddle2_top_q = 214, paddle2_top_d; 
-reg [9:0] ball_x_q = 319, ball_y_q = 280, ball_x_d, ball_y_d;
-reg ball_xdelta_q = 0, ball_xdelta_d; // 1 --> bounce from left
-reg ball_ydelta_q = 0, ball_ydelta_d; // 0 --> bounce from right
+reg [9:0] paddle1_top_q, paddle1_top_d; 
+reg [9:0] paddle2_top_q, paddle2_top_d; 
+reg [9:0] ball_x_q, ball_y_q, ball_x_d, ball_y_d;
+reg ball_xdelta_q, ball_xdelta_d; // 1 --> bounce from left
+reg ball_ydelta_q, ball_ydelta_d; // 0 --> bounce from right
 
 // 定期更新 register 值
 always @(posedge clk, negedge rst)
@@ -154,19 +154,14 @@ begin
     if(ball_x_d > X_RIGHT_BOUNDARY)begin 
         miss2 = 1;
 		  miss1 = 0;
-		  ball_x_d = 319; //ball @ center of screen
-		  ball_y_d = 239; //ball @ center of screen
+//		  ball_xdelta_d = 1;
+//		  ball_ydelta_d = 1;
 		  end
 	 else if(X_LEFT_BOUNDARY > ball_x_d)begin
 		  miss1 = 1;
 		  miss2 = 0;
-		  ball_x_d = 319; //ball @ center of screen
-		  ball_y_d = 239; //ball @ center of screen
-		  end
-	 else
-	     begin
-		  miss1 = miss1;
-		  miss2 = miss2;
+//		  ball_xdelta_d = 1;
+//		  ball_ydelta_d = 0;
 		  end
     
     // 更新 ball position
