@@ -10,8 +10,8 @@ localparam COUNT_MAX = 25000000;
 
 reg [24:0] count;  // 25位計數器足以計數到25,000,000
 
-always @(posedge clk or posedge rst) begin
-    if (rst) begin
+always @(posedge clk or negedge rst) begin
+    if (!rst) begin
         count <= 0;
         clk_1Hz <= 0;
     end else begin

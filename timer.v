@@ -16,25 +16,25 @@ end
 
 always @(posedge clk, negedge rst)
 begin
-    if(!rst)
-    begin
+    if(!rst)begin
         min <= 4'd2;
         sec1 <= 4'd0;
         sec2 <= 4'd0;
     end
-    else 
-    begin
-        if (start)
-        begin
+    else begin
+        if (start) begin
             // 如果秒鐘的個位數達到0且十位數也為0
-            if (sec2 == 4'd0 && sec1 == 4'd0) 
-            begin
-                if (min > 4'd0) 
-                begin
+            if (sec2 == 4'd0 && sec1 == 4'd0)begin
+                if (min > 4'd0) begin
                     min <= min - 4'd1; // 減少一分鐘
                     sec1 <= 4'd5;
                     sec2 <= 4'd9;
                 end
+					 else begin
+						min <= min;
+						sec1 <= sec1;
+						sec2 <= sec2;
+					 end
             end
             else if (sec2 == 4'd0) 
             begin
@@ -42,11 +42,18 @@ begin
             sec1 <= sec1 - 4'd1;
             sec2 <= 4'd9;
             end
-            else begin
+            else 
+                begin
             // 減少一秒
-            sec2 <= sec2 - 4'd1;
-            end
+                sec2 <= sec2 - 4'd1;
+                end
         end
+		  else
+		  begin
+				min <= min;
+				sec1 <= sec1;
+				sec2 <= sec2;
+		  end
     end
 end
 

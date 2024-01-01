@@ -31,7 +31,7 @@ module state_machine(
     output reg miss2   // player2 misses
 );
 
-localparam  // X coordinate
+parameter  // X coordinate
             paddle1_L = 39,
             paddle1_R = 49,
             paddle2_L = 590,
@@ -79,7 +79,7 @@ begin
 end
 
 // ball movement & miss judger
-always @* 
+always @(*) 
 begin
   paddle1_top_d = paddle1_top_q;
   paddle2_top_d = paddle2_top_q;

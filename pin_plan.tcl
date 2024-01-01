@@ -1,31 +1,31 @@
 # set clock 
-set_location_assignment PIN_M9 -to clock;
+set_location_assignment PIN_M9 -to clk;
 # set reset
 set_location_assignment PIN_P22 -to rst;
 
 # set dot matrix column
-set_location_assignment PIN_D13 -to dot_column1[7];
-set_location_assignment PIN_A13 -to dot_column1[6];
-set_location_assignment PIN_B12 -to dot_column1[5];
-set_location_assignment PIN_C13 -to dot_column1[4];
-set_location_assignment PIN_E14 -to dot_column1[3];
-set_location_assignment PIN_A12 -to dot_column1[2];
-set_location_assignment PIN_B15 -to dot_column1[1];
-set_location_assignment PIN_E15 -to dot_column1[0];
+set_location_assignment PIN_G11 -to dot_col1[7];
+set_location_assignment PIN_H10 -to dot_col1[6];
+set_location_assignment PIN_H14 -to dot_col1[5];
+set_location_assignment PIN_G18 -to dot_col1[4];
+set_location_assignment PIN_A15 -to dot_col1[3];
+set_location_assignment PIN_H18 -to dot_col1[2];
+set_location_assignment PIN_J19 -to dot_col1[1];
+set_location_assignment PIN_J11 -to dot_col1[0];
 
-set_location_assignment PIN_L8 -to dot_column2[7];
-set_location_assignment PIN_J13 -to dot_column2[6];
-set_location_assignment PIN_C15 -to dot_column2[5];
-set_location_assignment PIN_B13 -to dot_column2[4];
-set_location_assignment PIN_E16 -to dot_column2[3];
-set_location_assignment PIN_G17 -to dot_column2[2];
-set_location_assignment PIN_J18 -to dot_column2[1];
-set_location_assignment PIN_A14 -to dot_column2[0];
+set_location_assignment PIN_L8 -to dot_col2[7];
+set_location_assignment PIN_J13 -to dot_col2[6];
+set_location_assignment PIN_C15 -to dot_col2[5];
+set_location_assignment PIN_B13 -to dot_col2[4];
+set_location_assignment PIN_E16 -to dot_col2[3];
+set_location_assignment PIN_G17 -to dot_col2[2];
+set_location_assignment PIN_J18 -to dot_col2[1];
+set_location_assignment PIN_A14 -to dot_col2[0];
 
 
 # set dot matrix row
 set_location_assignment PIN_D13 -to dot_row1[7];
-set_location_assignment PIN_A13 -to dot_row2[6];
+set_location_assignment PIN_A13 -to dot_row1[6];
 set_location_assignment PIN_B12 -to dot_row1[5];
 set_location_assignment PIN_C13 -to dot_row1[4];
 set_location_assignment PIN_E14 -to dot_row1[3];
@@ -86,4 +86,4 @@ set_location_assignment PIN_AB17    -to sd_min[1];
 set_location_assignment PIN_Y19     -to sd_min[0];
 
 #set start
-set_location_assignment PIN_U7      -to start;
+set_location_assignment PIN_M6      -to start;
