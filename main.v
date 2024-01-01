@@ -175,6 +175,14 @@ two_sec_counter fd6(
     .clk_2s(clk_2s)
 );
 
+two_sec_counter fd6(
+    // input
+    .clk(clk),
+    .rst(rst),
+    .start_counting(newball_timer_start),
+    // output 
+    .clk_2s(clk_2s)
+);
 
 key_pad_controller kp(
     // input
