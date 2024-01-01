@@ -29,7 +29,7 @@ module ascii_rom(
 	reg [10:0] addr_reg;
 	
 	always @(posedge clk)
-		addr_reg <= addr + 1;
+		addr_reg <= addr;
 		
 	always @*
 		case(addr_reg)
