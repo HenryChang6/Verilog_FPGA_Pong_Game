@@ -22,7 +22,7 @@ module state_machine(
     input  up2,
     input  down1,
     input  down2,
-    input  sec1,    //遊戲秒數的十位數 （因為遊戲機制會是倒數結束，所以應該要是每減少一次，速度就上升一些）
+    input  [3:0]min,    //遊戲秒數的十位數 （因為遊戲機制會是倒數結束，所以應該要是每減少一次，速度就上升一些）
     output [9:0] ball_x,
     output [9:0] ball_y,
     output [9:0] paddle1_q, //paddle1的y座標（x座標不會動 不用管）
@@ -42,19 +42,19 @@ parameter  // X coordinate
             ball_side_length = 10,
             //velocity
             PADDLE_VELOCITY = 8,
-            BALL_VELOCITY_POS = 2,  // down, rihgt
-            BALL_VELOCITY_NEG = -2, // up, left
             // Border (wall thick = 10)
             X_RIGHT_BOUNDARY = 630, 
             X_LEFT_BOUNDARY = 9,
             Y_BTM_BOUNDARY = 470,
             Y_TOP_BOUNDARY = 9;
-        
+parameter BALL_VELOCITY_POS = 1;  // down, rihgt
+parameter BALL_VELOCITY_NEG = -1; // up, left
 reg [9:0] paddle1_top_q, paddle1_top_d; 
 reg [9:0] paddle2_top_q, paddle2_top_d; 
 reg [9:0] ball_x_q, ball_y_q, ball_x_d, ball_y_d;
 reg ball_xdelta_q, ball_xdelta_d; // 1 --> bounce from left
 reg ball_ydelta_q, ball_ydelta_d; // 0 --> bounce from right
+reg [4:0] score_counter;
 
 // 定期更新 register 值
 always @(posedge clk, negedge rst)
@@ -173,9 +173,22 @@ begin
 end
 
 // velocity adjust
-// ...
-// ...
-// ...
+//always @(posedge clk)
+//begin
+//	if(!rst)
+//	begin
+//		BALL_VELOCITY_POS <= 1;
+//		BALL_VELOCITY_NEG <= -1;
+//		
+//	end
+//	else
+//	begin
+//		if((min == 4'd1) && BALL_VELOCITY_NEG > -3)
+//			BALL_VELOCITY_NEG <= BALL_VELOCITY_NEG - 1;
+//		if((min == 4'd1) && BALL_VELOCITY_POS < 3)
+//			BALL_VELOCITY_POS <= BALL_VELOCITY_POS + 1;
+//	end	
+//end
 
 // 輸出賦值
 assign paddle1_q = paddle1_top_d;
