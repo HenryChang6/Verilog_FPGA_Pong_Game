@@ -42,10 +42,11 @@ begin
             sec1 <= sec1 - 4'd1;
             sec2 <= 4'd9;
             end
-            else begin
+            else 
+                begin
             // 減少一秒
-            sec2 <= sec2 - 4'd1;
-            end
+                sec2 <= sec2 - 4'd1;
+                end
         end
 		  else
 		  begin

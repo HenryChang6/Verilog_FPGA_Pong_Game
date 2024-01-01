@@ -10,7 +10,7 @@ module key_pad_controller (
 );
 
 reg [3:0] keypadBuf;
-always @(posedge clk or negedge rst) 
+always @(posedge clk) 
 begin
     if(!rst) 
     begin

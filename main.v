@@ -11,8 +11,9 @@ module main(
     output [3:0] blue,
     output [7:0] dot_row1,
     output [7:0] dot_col1,
-	 output [7:0] dot_row2,
+    output [7:0] dot_row2,
     output [7:0] dot_col2,
+    output [3:0] kp_row,
     output [6:0] sd_sec_dig1, //七段顯示器 Hex0
     output [6:0] sd_sec_dig2, //七段顯示器 Hex1
     output [6:0] sd_min, //七段顯示器 Hex2
@@ -175,15 +176,6 @@ two_sec_counter fd6(
     .clk_2s(clk_2s)
 );
 
-two_sec_counter fd6(
-    // input
-    .clk(clk),
-    .rst(rst),
-    .start_counting(newball_timer_start),
-    // output 
-    .clk_2s(clk_2s)
-);
-
 key_pad_controller kp(
     // input
     .clk(clk_100Hz),
@@ -194,7 +186,8 @@ key_pad_controller kp(
     .up1(up1),
     .up2(up2),
     .down1(down1),
-    .down2(down2)
+    .down2(down2),
+    .kp_row(kp_row)
 );
 
 state_machine sm (
