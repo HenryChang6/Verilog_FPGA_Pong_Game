@@ -49,12 +49,14 @@ parameter  // X coordinate
             Y_TOP_BOUNDARY = 9;
 parameter BALL_VELOCITY_POS = 1;  // down, rihgt
 parameter BALL_VELOCITY_NEG = -1; // up, left
+parameter BALL_VELOCITY_ACC_POS = 2;
+parameter BALL_VELOCITY_ACC_NEG = -2;
 reg [9:0] paddle1_top_q, paddle1_top_d; 
 reg [9:0] paddle2_top_q, paddle2_top_d; 
 reg [9:0] ball_x_q, ball_y_q, ball_x_d, ball_y_d;
 reg ball_xdelta_q, ball_xdelta_d; // 1 --> bounce from left
 reg ball_ydelta_q, ball_ydelta_d; // 0 --> bounce from right
-reg [4:0] score_counter;
+reg ACC;
 
 // 定期更新 register 值
 always @(posedge clk, negedge rst)
@@ -67,6 +69,7 @@ begin
     ball_y_q <= 280;
     ball_xdelta_q <= 0;
     ball_ydelta_q <= 0;
+	 ACC <= 0;
   end
   else
   begin
@@ -76,6 +79,10 @@ begin
     ball_y_q<=ball_y_d;
     ball_xdelta_q<=ball_xdelta_d;
     ball_ydelta_q<=ball_ydelta_d;
+	 if(min != 0)
+		  ACC <= 0;
+	 else
+		  ACC <= 1;
   end
 end
 
@@ -90,6 +97,7 @@ begin
   ball_ydelta_d = ball_ydelta_q;
   miss1 = 0;
   miss2 = 0;
+  
   if(stop)
   begin
     ball_x_d = 319; //ball @ center of screen
@@ -165,8 +173,8 @@ begin
 		  end
     
     // 更新 ball position
-    ball_x_d = ball_xdelta_d ? (ball_x_q + BALL_VELOCITY_POS) : (ball_x_q + BALL_VELOCITY_NEG);
-    ball_y_d = ball_ydelta_d ? (ball_y_q + BALL_VELOCITY_POS) : (ball_y_q + BALL_VELOCITY_NEG);
+    ball_x_d = ball_xdelta_d ? (ACC ? ball_x_q + BALL_VELOCITY_ACC_POS : ball_x_q + BALL_VELOCITY_POS) : (ACC ? ball_x_q + BALL_VELOCITY_ACC_NEG : ball_x_q + BALL_VELOCITY_NEG);
+    ball_y_d = ball_ydelta_d ? (ACC ? ball_y_q + BALL_VELOCITY_ACC_POS : ball_y_q + BALL_VELOCITY_POS) : (ACC ? ball_y_q + BALL_VELOCITY_ACC_NEG : ball_y_q + BALL_VELOCITY_NEG);
 
     
   end
@@ -177,16 +185,17 @@ end
 //begin
 //	if(!rst)
 //	begin
-//		BALL_VELOCITY_POS <= 1;
-//		BALL_VELOCITY_NEG <= -1;
+//		BALL_VELOCITY_POS = 1;
+//		BALL_VELOCITY_NEG = -1;
 //		
 //	end
 //	else
 //	begin
-//		if((min == 4'd1) && BALL_VELOCITY_NEG > -3)
-//			BALL_VELOCITY_NEG <= BALL_VELOCITY_NEG - 1;
-//		if((min == 4'd1) && BALL_VELOCITY_POS < 3)
-//			BALL_VELOCITY_POS <= BALL_VELOCITY_POS + 1;
+//		if(score1_counter == 3 || score2_counter == 3)
+//		begin
+//			BALL_VELOCITY_NEG = BALL_VELOCITY_NEG - 1;
+//			BALL_VELOCITY_POS = BALL_VELOCITY_POS + 1;
+//		end
 //	end	
 //end
 
