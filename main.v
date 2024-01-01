@@ -146,6 +146,16 @@ fd_ball fd5(
     .clk(clk),
     .rst(rst),
     // output
+    .clk_25MHz(clk_25MHz)
+);
+
+
+
+fd_ball fd5(
+    // input
+    .clk(clk),
+    .rst(rst),
+    // output
     .clk_25MHz(clk_ball)
 );
 
@@ -158,6 +168,14 @@ two_sec_counter fd6(
     .clk_2s(clk_2s)
 );
 
+two_sec_counter fd6(
+    // input
+    .clk(clk),
+    .rst(rst),
+    .start_counting(newball_timer_start),
+    // output 
+    .clk_2s(clk_2s)
+);
 
 key_pad_controller kp(
     // input
@@ -251,6 +269,9 @@ graphics_gen gp(
     .ball_y(ball_y),
     .paddle_1(paddle1),
     .paddle_2(paddle2),
+	.h_cnt(h_cnt),
+	.v_cnt(v_cnt),
+	.enable(enable),
     // output
     .red(red),
     .green(green),
