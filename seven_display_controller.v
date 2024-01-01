@@ -1,9 +1,9 @@
 module seven_display_controller (
     input  rst,
-	input  clk,
-	input [3:0] min,
-	input [3:0] sec1,
-	input [3:0] sec2,
+	  input  clk,
+	  input [3:0] min,
+	  input [3:0] sec1,
+	  input [3:0] sec2,
     output reg [6:0] sd_min,
     output reg [6:0] sd_sec_dig1,
 	 output reg [6:0] sd_sec_dig2
