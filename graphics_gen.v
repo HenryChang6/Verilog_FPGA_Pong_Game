@@ -1,6 +1,6 @@
-module graphic_gen(
-    input [11:0] paddle1,
-	input [11:0] paddle2,
+module graphics_gen(
+    input [11:0] paddle_1,
+	input [11:0] paddle_2,
 	input [11:0] ball_x,
     input [11:0] ball_y,
     input [11:0] v_cnt,
