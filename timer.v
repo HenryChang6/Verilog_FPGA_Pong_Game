@@ -7,12 +7,12 @@ module timer(
     output reg [3:0] sec2 // 秒鐘的個位數
 );
 
-initial 
-begin
-    min = 4'd2;
-    sec1 = 4'd0;
-    sec2 = 4'd0;
-end
+//initial 
+//begin
+//    min = 4'd2;
+//    sec1 = 4'd0;
+//    sec2 = 4'd0;
+//end
 
 always @(posedge clk, negedge rst)
 begin

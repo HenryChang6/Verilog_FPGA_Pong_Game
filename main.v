@@ -32,7 +32,8 @@ wire [3:0]min, sec1, sec2;
 wire [11:0]h_cnt, v_cnt;
 wire enable;
 wire miss1, miss2;
-reg[3:0] score1_q = 0, score1_d, score2_q = 0, score2_d;
+reg [3:0] score1_q, score1_d, score2_q, score2_d;
+wire [3:0] score_1_q_wire, score_2_q_wire;
 // q 代表 現在值  d 代表 下一個時刻的值
 reg [1:0] state_q, state_d;
 reg stop;
@@ -40,6 +41,8 @@ reg newball_timer_start;
 
 parameter [1:0] new_game = 0, play = 1, new_ball = 2, over = 3;
 
+assign score1_q_wire = score1_q;
+assign score2_q_wire = score2_q;
 
 
 // 每個 clk 定期更新值
@@ -55,7 +58,7 @@ begin
     begin
         state_q <= state_d;
         score1_q <= score1_d;
-        score2_q <= score1_d;
+        score2_q <= score2_d;
     end
 end
 
@@ -106,8 +109,8 @@ begin
 			  //when any of the player misses, 2 seconds will be alloted before the game can start again
 			  new_ball:
 			  begin   
-					newball_timer_start = 0;
-					if(clk_2s && start) state_d = play;
+					newball_timer_start = 1;
+					if(clk_2s) state_d = play;
 					else state_d = new_ball;
 			  end
 
@@ -210,8 +213,8 @@ state_machine sm (
 dot_matrix_controller dm(
 	.clk(clk_10kHz),
 	.rst(rst),
-	.score1(score1_q),
-	.score2(score2_q),
+	.score1(score2_q_wire),
+	.score2(score1_q_wire),
 	.dot_col1(dot_col1),
 	.dot_col2(dot_col2),
 	.dot_row(dot_row1)
