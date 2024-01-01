@@ -151,10 +151,18 @@ begin
 		   ball_ydelta_d = ball_ydelta_d;
 
     // player miss Determination
-    if(ball_x_d > X_RIGHT_BOUNDARY) 
+    if(ball_x_d > X_RIGHT_BOUNDARY)begin 
         miss2 = 1;
-	 else if(X_LEFT_BOUNDARY > ball_x_d)
+		  miss1 = 0;
+		  ball_x_d = 319; //ball @ center of screen
+		  ball_y_d = 239; //ball @ center of screen
+		  end
+	 else if(X_LEFT_BOUNDARY > ball_x_d)begin
 		  miss1 = 1;
+		  miss2 = 0;
+		  ball_x_d = 319; //ball @ center of screen
+		  ball_y_d = 239; //ball @ center of screen
+		  end
 	 else
 	     begin
 		  miss1 = miss1;
