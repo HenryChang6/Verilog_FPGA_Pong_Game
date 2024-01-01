@@ -8,9 +8,16 @@ module key_pad_controller (
     output reg down1, // 0 being pressed
     output reg down2 // 7 being pressed
 );
+initial
+begin
+up1 <= 0;
+up2 <= 0;
+down1 <= 0;
+down2 <= 0;
+end
 
 reg [3:0] keypadBuf;
-always @(posedge clk) 
+always @(posedge clk or negedge rst) 
 begin
     if(!rst) 
     begin

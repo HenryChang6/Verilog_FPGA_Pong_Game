@@ -11,9 +11,8 @@ module main(
     output [3:0] blue,
     output [7:0] dot_row1,
     output [7:0] dot_col1,
-    output [7:0] dot_row2,
+	 output [7:0] dot_row2,
     output [7:0] dot_col2,
-    output [3:0] kp_row,
     output [6:0] sd_sec_dig1, //七段顯示器 Hex0
     output [6:0] sd_sec_dig2, //七段顯示器 Hex1
     output [6:0] sd_min, //七段顯示器 Hex2
@@ -34,7 +33,7 @@ wire miss1, miss2;
 reg[2:0] score1_q = 0, score1_d, score2_q = 0, score2_d;
 // q 代表 現在值  d 代表 下一個時刻的值
 reg [1:0] state_q, state_d;
-wire stop;
+reg stop;
 reg newball_timer_start;
 
 parameter [1:0] new_game = 0, play = 1, new_ball = 2, over = 3;
@@ -56,17 +55,16 @@ begin
     end
 end
 
-assign stop = (state_q != play);
 
 // FSM Game Logic
 always @*
 begin
-	 if(!rst)
-    begin
-        state_d <= 2'd0;
-    end
-    else
-		begin
+	 state_d = state_q;
+	 score1_d = score1_q;
+	 score2_d = score2_q;
+	 stop = 1;
+	 newball_timer_start = 0;
+  
 		 case(state_q)
 
 			  new_game:
@@ -77,25 +75,24 @@ begin
 
 			  play:
 			  begin
-					if(min == 0 && sec1 == 0 && sec2 == 0)
-						 state_d = over;
-					
-					else 
-					begin
-						 if(miss1 || miss2)
-						 begin
-							  newball_timer_start = 1;
-							  if(miss1) score2_d = score2_q + 1;
-							  else score1_d = score1_q + 1;
-							  state_d = new_ball;
-						 end
-						 else
-						 begin
-							  state_d = play;
-							  score1_d = score1_d;
-							  score2_d = score2_d;
-						 end
-					end
+					 stop = 0;
+			
+					 if(miss1 || miss2)
+					 begin
+						  newball_timer_start = 1;
+						  if(miss1) score2_d = score2_q + 1;
+						  else score1_d = score1_q + 1;
+						  state_d = new_ball;
+					 end
+					 else if(min == 0 && sec1 == 0 && sec2 == 0)
+					 begin
+							state_d = over;
+							stop = 1;
+					 end
+					 else
+					 begin
+							state_d = play;
+					 end
 			  end
 			  
 			  //when any of the player misses, 2 seconds will be alloted before the game can start again
@@ -108,20 +105,10 @@ begin
 			  over:
 			  begin 
 					// When time over. End the game
-					if(min == 0 && sec1 == 0 && sec2 == 0) 
+					if(clk_2s) 
 						state_d = new_game;
 			  end
-
-			  default:
-			  begin
-					state_d = state_q;
-					score1_d = score1_q;
-					score2_d = score2_q;
-			  end
 		 endcase
-	
-	end
-
 end
 
 fd_1Hz fd1(
@@ -176,6 +163,7 @@ two_sec_counter fd6(
     .clk_2s(clk_2s)
 );
 
+
 key_pad_controller kp(
     // input
     .clk(clk_100Hz),
@@ -186,13 +174,12 @@ key_pad_controller kp(
     .up1(up1),
     .up2(up2),
     .down1(down1),
-    .down2(down2),
-    .kp_row(kp_row)
+    .down2(down2)
 );
 
 state_machine sm (
     // input
-    .clk(clk),
+    .clk(clk_100Hz),
     .rst(rst),
     .stop(stop),
     .up1(up1),
@@ -279,6 +266,6 @@ graphics_gen gp(
     .blue(blue)
 );
 
-assign led = {2'b00, state_q};
+assign led = {score1_q, state_q};
 
 endmodule
