@@ -141,7 +141,7 @@ fd_10kHz fd3(
 );
 
 
-fd_ball fd5(
+fd_25MHz fd4(
     // input
     .clk(clk),
     .rst(rst),
@@ -157,15 +157,6 @@ fd_ball fd5(
     .rst(rst),
     // output
     .clk_25MHz(clk_ball)
-);
-
-two_sec_counter fd6(
-    // input
-    .clk(clk),
-    .rst(rst),
-    .start_counting(newball_timer_start),
-    // output 
-    .clk_2s(clk_2s)
 );
 
 two_sec_counter fd6(
