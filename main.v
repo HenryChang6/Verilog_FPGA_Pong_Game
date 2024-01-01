@@ -11,7 +11,7 @@ module main(
     output [3:0] blue,
     output [7:0] dot_row1,
     output [7:0] dot_col1,
-	 output [7:0] dot_row2,
+//	 output [7:0] dot_row2,
     output [7:0] dot_col2,
     output [6:0] sd_sec_dig1, //七段顯示器 Hex0
     output [6:0] sd_sec_dig2, //七段顯示器 Hex1
@@ -27,18 +27,20 @@ wire clk_1Hz, clk_100Hz , clk_10kHz, clk_25MHz, clk_ball, clk_2s;
 wire [9:0]paddle1;
 wire [9:0]paddle2;
 wire [9:0]ball_x;
-wire [9:0] ball_y;
-wire [3:0] min, sec1, sec2;
-wire [11:0] h_cnt, v_cnt;
+wire [9:0]ball_y;
+wire [3:0]min, sec1, sec2;
+wire [11:0]h_cnt, v_cnt;
 wire enable;
 wire miss1, miss2;
-reg[2:0] score1_q = 0, score1_d, score2_q = 0, score2_d;
+reg[3:0] score1_q = 0, score1_d, score2_q = 0, score2_d;
 // q 代表 現在值  d 代表 下一個時刻的值
 reg [1:0] state_q, state_d;
 reg stop;
 reg newball_timer_start;
 
 parameter [1:0] new_game = 0, play = 1, new_ball = 2, over = 3;
+
+
 
 // 每個 clk 定期更新值
 always @(posedge clk or negedge rst) 
@@ -58,7 +60,7 @@ begin
 end
 
 // FSM Game Logic
-always @*
+always @(*)
 begin
 	 state_d = state_q;
 	 score1_d = score1_q;
@@ -78,11 +80,16 @@ begin
 			  play:
 			  begin
 					 stop = 0;
-					 if(miss1 || miss2)
+					 if(miss1)
 					 begin
 						  newball_timer_start = 1;
-						  if(miss1) score2_d = score2_q + 1;
-						  else score1_d = score1_q + 1;
+						  score2_d = score2_q + 1;
+						  state_d = new_ball;
+					 end
+					 else if(miss2)
+					 begin
+						  newball_timer_start = 1;
+						  score1_d = score1_q + 1;
 						  state_d = new_ball;
 					 end
 					 else if(min == 0 && sec1 == 0 && sec2 == 0)
@@ -200,26 +207,35 @@ state_machine sm (
     .miss2(miss2)
 );
 
-
-ascii_dot_matrix_controller dm1(
-    // input
-    .ascii_code(5),
-    .clk(clk_10kHz),
-	 .rst(rst),
-    // output
-    .col(dot_col1),
-    .row(dot_row1)
+dot_matrix_controller dm(
+	.clk(clk_10kHz),
+	.rst(rst),
+	.score1(score1_q),
+	.score2(score2_q),
+	.dot_col1(dot_col1),
+	.dot_col2(dot_col2),
+	.dot_row(dot_row1)
 );
 
-ascii_dot_matrix_controller dm2(
-    // input
-    .ascii_code(2),
-    .clk(clk_10kHz),
-	 .rst(rst),
-    // output
-    .col(dot_col2),
-    .row(dot_row2)
-);
+//ascii_dot_matrix_controller dm1(
+//    // input
+//    .ascii_code(score1_q),
+//    .clk(clk_10kHz),
+//	 .rst(rst),
+//    // output
+//    .col(dot_col1),
+//    .row(dot_row1)
+//);
+//
+//ascii_dot_matrix_controller dm2(
+//    // input
+//    .ascii_code(score2_q),
+//    .clk(clk_10kHz),
+//	 .rst(rst),
+//    // output
+//    .col(dot_col2),
+//    .row(dot_row2)
+//);
 
 
 timer tt( //用一個 max_min parameter來倒數	
@@ -272,5 +288,7 @@ graphics_gen gp(
     .green(green),
     .blue(blue)
 );
+
+assign led = {2'b00, miss1, miss2};
 
 endmodule

@@ -1,7 +1,7 @@
 module ascii_dot_matrix_controller (
     input clk,               // Clock input
 	 input rst,
-    input [2:0] ascii_code,  // 7-bit ASCII code
+    input [3:0] ascii_code,  // 7-bit ASCII code
     output reg [7:0] row,    // Row data for the dot matrix
     output reg [7:0] col     // Column data for the dot matrix
 );
@@ -19,7 +19,7 @@ reg [3:0] current_row = 0;  // To cycle through the rows
 
 // Update the display based on the ASCII code and current row
 always @(posedge clk or negedge rst) begin
-    extended_ascii_code <= {4'b0000, ascii_code} + 8'b00110000; 
+    extended_ascii_code <= {3'b000, ascii_code} + 8'b00110000; 
 	 if(!rst)begin
 		row <= 8'b11111111;
 	 end 
