@@ -24,8 +24,10 @@ module main(
 
 wire up1, up2, down1, down2;
 wire clk_1Hz, clk_100Hz , clk_10kHz, clk_25MHz, clk_ball, clk_2s;
-wire paddle1, paddle2;
-wire ball_x, ball_y;
+wire [9:0]paddle1;
+wire [9:0]paddle2;
+wire [9:0]ball_x;
+wire [9:0] ball_y;
 wire [3:0] min, sec1, sec2;
 wire [11:0] h_cnt, v_cnt;
 wire enable;
@@ -55,7 +57,6 @@ begin
     end
 end
 
-
 // FSM Game Logic
 always @*
 begin
@@ -71,12 +72,12 @@ begin
 			  begin
 					score1_d = 0; score2_d = 0;
 					if(start) state_d = play;
+					else state_d = new_game;
 			  end
 
 			  play:
 			  begin
 					 stop = 0;
-			
 					 if(miss1 || miss2)
 					 begin
 						  newball_timer_start = 1;
@@ -100,6 +101,7 @@ begin
 			  begin   
 					newball_timer_start = 0;
 					if(clk_2s && start) state_d = play;
+					else state_d = new_ball;
 			  end
 
 			  over:
@@ -107,6 +109,8 @@ begin
 					// When time over. End the game
 					if(clk_2s) 
 						state_d = new_game;
+					else
+						state_d = over;
 			  end
 		 endcase
 end
@@ -196,10 +200,12 @@ state_machine sm (
     .miss2(miss2)
 );
 
+
 ascii_dot_matrix_controller dm1(
     // input
-    .ascii_code(score1_q),
+    .ascii_code(5),
     .clk(clk_10kHz),
+	 .rst(rst),
     // output
     .col(dot_col1),
     .row(dot_row1)
@@ -207,8 +213,9 @@ ascii_dot_matrix_controller dm1(
 
 ascii_dot_matrix_controller dm2(
     // input
-    .ascii_code(score2_q),
+    .ascii_code(2),
     .clk(clk_10kHz),
+	 .rst(rst),
     // output
     .col(dot_col2),
     .row(dot_row2)
@@ -265,7 +272,5 @@ graphics_gen gp(
     .green(green),
     .blue(blue)
 );
-
-assign led = {score1_q, state_q};
 
 endmodule

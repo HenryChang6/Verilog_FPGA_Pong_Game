@@ -23,10 +23,10 @@ module state_machine(
     input  down1,
     input  down2,
     input  sec1,    //遊戲秒數的十位數 （因為遊戲機制會是倒數結束，所以應該要是每減少一次，速度就上升一些）
-    output ball_x,
-    output ball_y,
-    output paddle1_q, //paddle1的y座標（x座標不會動 不用管）
-    output paddle2_q, //paddle2的y座標（x座標不會動 不用管）
+    output [9:0] ball_x,
+    output [9:0] ball_y,
+    output [9:0] paddle1_q, //paddle1的y座標（x座標不會動 不用管）
+    output [9:0] paddle2_q, //paddle2的y座標（x座標不會動 不用管）
     output reg miss1,   // player1 misses  
     output reg miss2   // player2 misses
 );
@@ -151,12 +151,10 @@ begin
 		   ball_ydelta_d = ball_ydelta_d;
 
     // player miss Determination
-    if(ball_x_q > X_RIGHT_BOUNDARY) 
-    begin
-       // if bounce from left and surpass right boudary --> player2 misses
-        if(ball_xdelta_q) miss2 = 1;
-        else miss1 = 1;
-    end
+    if(ball_x_d > X_RIGHT_BOUNDARY) 
+        miss2 = 1;
+	 else if(X_LEFT_BOUNDARY > ball_x_d)
+		  miss1 = 1;
 	 else
 	     begin
 		  miss1 = miss1;
@@ -167,6 +165,7 @@ begin
     ball_x_d = ball_xdelta_d ? (ball_x_q + BALL_VELOCITY_POS) : (ball_x_q + BALL_VELOCITY_NEG);
     ball_y_d = ball_ydelta_d ? (ball_y_q + BALL_VELOCITY_POS) : (ball_y_q + BALL_VELOCITY_NEG);
 
+    
   end
 end
 
@@ -176,8 +175,8 @@ end
 // ...
 
 // 輸出賦值
-assign paddle1_q = paddle1_top_q;
-assign paddle2_q = paddle2_top_q;
+assign paddle1_q = paddle1_top_d;
+assign paddle2_q = paddle2_top_d;
 assign ball_x = ball_x_q;
 assign ball_y = ball_y_q;
 

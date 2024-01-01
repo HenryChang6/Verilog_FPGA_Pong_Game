@@ -76,7 +76,7 @@ begin
 				down2 = 0;
 		  end
 
-		  4'h8:
+		  4'hc:
 		  begin
 				up1 = 0;
 				up2 = 1;
@@ -90,7 +90,7 @@ begin
 				down1 = 1;
 				down2 = 0;
 		  end
-		  4'h7:
+		  4'h9:
 		  begin
 				up1 = 0;
 				up2 = 0;
