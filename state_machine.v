@@ -31,6 +31,7 @@ module state_machine(
     output reg miss2   // player2 misses
 );
 
+
 parameter  // X coordinate
             paddle1_L = 39,
             paddle1_R = 49,
@@ -41,8 +42,8 @@ parameter  // X coordinate
             ball_side_length = 10,
             //velocity
             PADDLE_VELOCITY = 8,
-            BALL_VELOCITY_POS = 4,  // down, rihgt
-            BALL_VELOCITY_NEG = -4, // up, left
+            BALL_VELOCITY_POS = 2,  // down, rihgt
+            BALL_VELOCITY_NEG = -2, // up, left
             // Border (wall thick = 10)
             X_RIGHT_BOUNDARY = 630, 
             X_LEFT_BOUNDARY = 9,
@@ -100,13 +101,15 @@ begin
   end
   else 
   begin
-
+		
     // paddle 1 
     if (up1 && paddle1_top_q > Y_TOP_BOUNDARY + PADDLE_VELOCITY)
       paddle1_top_d = paddle1_top_q - PADDLE_VELOCITY;
 
     else if (down1 && paddle1_top_q < (Y_BTM_BOUNDARY - PADDLE_VELOCITY))
       paddle1_top_d = paddle1_top_q + PADDLE_VELOCITY;
+	 else 
+		paddle1_top_d = paddle1_top_d;
 
     // paddle 2
     if (up2 && paddle2_top_q > Y_TOP_BOUNDARY + PADDLE_VELOCITY)
@@ -114,6 +117,8 @@ begin
 
     else if (down2 && paddle2_top_q < (Y_BTM_BOUNDARY - PADDLE_VELOCITY))
       paddle2_top_d = paddle2_top_q + PADDLE_VELOCITY;
+	 else 
+		paddle2_top_d = paddle2_top_d;
 
     // bounce from paddle1 (left)
     if( ball_x_q <= paddle1_R && 
@@ -121,7 +126,8 @@ begin
         paddle1_top_q <= (ball_y_q + ball_side_length) && 
         ball_y_q <= (paddle1_top_q + paddle_length)) 
 
-        ball_xdelta_d = 1; 
+        ball_xdelta_d = 1;  
+			
 
     // bounce from paddle2 (right)
 		else if( (paddle2_L <= (ball_x_q + ball_side_length) &&
@@ -130,6 +136,8 @@ begin
              ball_y_q <= (paddle2_top_q + paddle_length) )
 
           ball_xdelta_d = 0; 
+	   else
+		    ball_xdelta_d = ball_xdelta_d;
 
     // bounce from top
 		if(ball_y_q <= Y_TOP_BOUNDARY) 
@@ -138,6 +146,9 @@ begin
     // bounce from bottom
 		else if(Y_BTM_BOUNDARY <= (ball_y_q + ball_side_length)) 
       ball_ydelta_d = 0; 
+	   
+		else
+		   ball_ydelta_d = ball_ydelta_d;
 
     // player miss Determination
     if(ball_x_q > X_RIGHT_BOUNDARY) 
@@ -146,6 +157,11 @@ begin
         if(ball_xdelta_q) miss2 = 1;
         else miss1 = 1;
     end
+	 else
+	     begin
+		  miss1 = miss1;
+		  miss2 = miss2;
+		  end
     
     // 更新 ball position
     ball_x_d = ball_xdelta_d ? (ball_x_q + BALL_VELOCITY_POS) : (ball_x_q + BALL_VELOCITY_NEG);
@@ -160,8 +176,8 @@ end
 // ...
 
 // 輸出賦值
-assign paddle1_y = paddle1_top_q;
-assign paddle2_y = paddle2_top_q;
+assign paddle1_q = paddle1_top_q;
+assign paddle2_q = paddle2_top_q;
 assign ball_x = ball_x_q;
 assign ball_y = ball_y_q;
 
