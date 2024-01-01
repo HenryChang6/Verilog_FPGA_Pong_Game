@@ -1,8 +1,8 @@
 module vga_controller (
 	input clk,
 	input rst,
-	input H_sync,
-	input V_sync,
+	output H_sync,
+	output V_sync,
 	output reg [11:0] h_cnt,
 	output reg [11:0] v_cnt,
 	output enable
