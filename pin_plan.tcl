@@ -1,5 +1,5 @@
 # set clock 
-set_location_assignment PIN_M9 -to clock;
+set_location_assignment PIN_M9 -to clk;
 # set reset
 set_location_assignment PIN_P22 -to rst;
 
