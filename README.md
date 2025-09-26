@@ -1,22 +1,25 @@
-# Ping Pong Game (verilog)
+# Verilog FPGA Pong Game
 
 ## Description
 
-### Seven Segment Display
+A two-player Pong game implemented in Verilog for FPGAs. This project features a VGA display for the game, seven-segment displays for the timer, and dot matrix displays for player scores.
 
-遊戲進行時間
+## Features
 
-### Dot Matrix
+*   **Two-Player Gameplay:** Compete against a friend in a classic game of Pong.
+*   **VGA Display:** The game is displayed on a standard VGA monitor.
+*   **Seven-Segment Timer:** A timer on seven-segment displays counts down the game time.
+*   **Dot Matrix Scoreboard:** Player scores are shown on two dot matrix displays.
+*   **Keypad Control:** Players use a keypad to control their paddles.
 
-兩塊, 分別顯示兩個玩家的分數
+## Hardware
+
+This project is designed to run on an FPGA. You will need to configure the pin assignments for your specific board in the `pin_plan.tcl` file.
 
 ## Demo
 
-## Reference
+[Demo Video](https://youtu.be/Ks2PTz6LR7c?si=HQMXtv5yfV6o8Igq)
 
-- https://github.com/AngeloJacobo/FPGA_Book_Experiments/blob/main/14.6.8%20Complete_Two_Player_PongGame%20%5BVIDEO%5D/src/pong_animated.v
+## Presentation
 
-- https://github.com/FPGADude/Digital-Design/tree/main/FPGA%20Projects/VGA%20Projects/Pong%20pt3
-
-- https://github.com/WavJaby/2023NCKUIntroDigitalSystemFinalProject/blob/main/src/seven_display.v
-
+[View Presentation](Presentation.pdf)
