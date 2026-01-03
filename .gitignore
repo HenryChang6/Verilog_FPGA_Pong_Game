@@ -3,6 +3,7 @@ db/
 output_files/
 *.qpf
 *.qsf
+*.qws
 ip/
 key_pad/
 hls/
